@@ -1,0 +1,61 @@
+name: Validate Repository Structure
+
+# Runs on every push and pull request so the check stays green
+# throughout the project, not just at submission time.
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check /docs folder exists
+        run: |
+          if [ ! -d "docs" ]; then
+            echo "::error::/docs folder is missing from the repository root."
+            exit 1
+          fi
+          echo "docs/ folder found."
+
+      - name: Check required planning documents exist
+        run: |
+          required_files=(
+            "docs/raceday_erd.png"
+            "docs/api_endpoint_plan.md"
+            "docs/raceday_schema.sql"
+          )
+          missing=0
+          for f in "${required_files[@]}"; do
+            if [ ! -f "$f" ]; then
+              echo "::error::Missing required file: $f"
+              missing=1
+            else
+              echo "Found: $f"
+            fi
+          done
+          if [ "$missing" -eq 1 ]; then
+            exit 1
+          fi
+
+      - name: Check SQL script is not empty
+        run: |
+          if [ ! -s "docs/raceday_schema.sql" ]; then
+            echo "::error::raceday_schema.sql exists but is empty."
+            exit 1
+          fi
+          echo "raceday_schema.sql looks good."
+
+      - name: Check README exists at repository root
+        run: |
+          if [ ! -f "README.md" ]; then
+            echo "::error::README.md is missing from the repository root."
+            exit 1
+          fi
+          echo "README.md found."
+
+      - name: All checks passed
+        run: echo "✅ Repository structure validated successfully."
