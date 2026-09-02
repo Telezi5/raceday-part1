@@ -52,7 +52,7 @@ CREATE TABLE dbo.Events (
     EventName       VARCHAR(150)    NOT NULL,
     EventDate       DATE            NOT NULL,
     City            VARCHAR(100)    NOT NULL,
-    Description     TEXT            NULL,
+    Description     VARCHAR(MAX)    NULL,
     Status          VARCHAR(20)     NOT NULL DEFAULT 'Draft'
                         CONSTRAINT CK_Events_Status CHECK (Status IN ('Draft', 'Published', 'Completed')),
     CONSTRAINT FK_Events_Organiser FOREIGN KEY (OrganiserID)
@@ -86,7 +86,7 @@ CREATE TABLE dbo.Venues (
     EventID          INT             NOT NULL UNIQUE,
     StartPoint       VARCHAR(150)    NOT NULL,
     EndPoint         VARCHAR(150)    NOT NULL,
-    RouteDescription TEXT            NULL,
+    RouteDescription VARCHAR(MAX)    NULL,
     ElevationGainM   INT             NOT NULL DEFAULT 0,
     CONSTRAINT FK_Venues_Events FOREIGN KEY (EventID)
         REFERENCES dbo.Events(EventID)
