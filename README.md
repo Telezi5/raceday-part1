@@ -24,6 +24,7 @@ RaceDay is a full-stack event management platform for South African road running
 
 📄 `docs/raceday_erd.png`
 
+The ERD models 6 entities: **Users, Events, Categories, Venues, Entries, Results.**
 
 - `Users` holds both Organisers and Participants in a single table, distinguished by a `Role` column — this reflects the role-based design used throughout the system.
 - `Entries` is the associative entity linking a Participant to a Category, resolving the many-to-many relationship between them.
