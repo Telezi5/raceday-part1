@@ -44,7 +44,9 @@ The ERD models 6 entities: **Users, Events, Categories, Venues, Entries, Results
 - Entries are nested under their parent Category (`/api/categories/{categoryId}/entries`) rather than exposed as a flat `/api/entries` resource, enforcing that an entry cannot exist without a category — matching the FK constraint in the SQL script.
 - Results are captured and corrected by the **Organiser**, not self-reported by the Participant, to protect the integrity of race results.
 
+This plan will be implemented as-is in Part 2. Any deviation between the implemented API and this plan will be explained here, in this section, at that time.
 
+---
 
 ## Section C — SQL Database Script
 
