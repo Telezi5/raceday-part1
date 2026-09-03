@@ -1,5 +1,8 @@
 # RaceDay — Part 1: System Planning and Database
 
+RaceDay is a full-stack event management platform for South African road running, walking, and cycling events. This repository contains the **Part 1 planning deliverables**: the data model, the API contract, and the database schema, all completed before any application code was written, as required by the brief.
+
+---
 
 ## Repository Structure
 
