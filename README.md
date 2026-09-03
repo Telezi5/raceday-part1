@@ -58,7 +58,7 @@ A T-SQL script for Microsoft SQL Server (SSMS) that:
 - Seeds the database with realistic sample data: 2 Organisers, 2 Participants, 3 Events, 2 Categories per event, a Venue per event, 4 sample Entries, and 2 sample Results
 
 ### How to run it
-1. Open **SQL Server Management Studio (SSMS)** and connect to your local instance.
+
 2. Open `docs/raceday_schema.sql`.
 3. Click **Execute** (or press F5).
 4. The script is written to be safely re-runnable — it drops and recreates the 6 tables each time, so running it twice will not cause errors.
