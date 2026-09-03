@@ -85,4 +85,3 @@ A T-SQL script for Microsoft SQL Server (SSMS) that:
 
 ## Commit History
 
-This repository was built with incremental, meaningful commits (20+) reflecting the actual order the planning work was done in — ERD first, then the API plan, then the SQL script, then CI setup — rather than a single bulk upload, so the history itself demonstrates the planning process.
