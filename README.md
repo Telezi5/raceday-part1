@@ -73,7 +73,6 @@ A T-SQL script for Microsoft SQL Server (SSMS) that:
   - `raceday_erd.png`, `api_endpoint_plan.md`, and `raceday_schema.sql` are all present,
   - the SQL script is not empty,
   - a root-level `README.md` exists.
-- A screenshot of a successful (green) run is included below.
 
 ### CI Build Status
 
