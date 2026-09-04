@@ -79,9 +79,7 @@ A T-SQL script for Microsoft SQL Server (SSMS) that:
 
 ![Successful CI build](docs/ci_build_screenshot.png)
 
-*(Replace this image with your own screenshot after your first successful Actions run — see setup instructions.)*
 
----
 
 ## Commit History
 
