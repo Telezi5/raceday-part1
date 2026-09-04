@@ -14,10 +14,7 @@ GO
 USE RaceDayDB;
 GO
 
-/* ------------------------------------------------------------
-   Drop tables if they already exist (in FK-safe order) so this
-   script can be re-run cleanly on the same instance.
-   ------------------------------------------------------------ */
+
 IF OBJECT_ID('dbo.Results', 'U') IS NOT NULL DROP TABLE dbo.Results;
 IF OBJECT_ID('dbo.Entries', 'U') IS NOT NULL DROP TABLE dbo.Entries;
 IF OBJECT_ID('dbo.Venues', 'U') IS NOT NULL DROP TABLE dbo.Venues;
