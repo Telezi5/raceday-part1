@@ -232,7 +232,7 @@ The schema follows the Part 1 ERD and SQL script: \*\*Users, Events, Categories,
 
 
 
-<<TOTAL>> tests in `RaceDay.Tests` start the real API in memory (real routing, real session cookies and the real role filter) with an in-memory database. They cover:
+<<55>> tests in `RaceDay.Tests` start the real API in memory (real routing, real session cookies and the real role filter) with an in-memory database. They cover:
 
 
 
