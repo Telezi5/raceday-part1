@@ -32,7 +32,7 @@ public class EventRequestDto
     [Required, StringLength(100)]
     public string City { get; set; } = string.Empty;
 
-    [Range(typeof(decimal), "0.01", "999.99")]
+    [Range(0.01, 999.99)]
     public decimal DistanceKM { get; set; }
 
     public string? Description { get; set; }
