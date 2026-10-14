@@ -24,7 +24,8 @@ builder.Services.AddSwaggerGen(options =>
 {
     var xmlFile = Path.Combine(AppContext.BaseDirectory,
         $"{typeof(Program).Assembly.GetName().Name}.xml");
-    options.IncludeXmlComments(xmlFile);
+    if (File.Exists(xmlFile))
+        options.IncludeXmlComments(xmlFile);
 });
 
 var app = builder.Build();
