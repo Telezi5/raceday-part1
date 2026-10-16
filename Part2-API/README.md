@@ -4,7 +4,7 @@ RaceDay is a South African running, walking and cycling event management platfor
 
 ## Video Presentation
 
-[Watch the Part 2 video walkthrough](YOUTUBE_LINK_HERE)
+[Watch the Part 2 video walkthrough](https://youtu.be/N4XWR6rf4jI)
 
 ## Tech Stack
 
