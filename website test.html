@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A Little Question for You 💗</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600&family=Playfair+Display:wght@700&display=swap');
+
+    :root { --pink: #f78fb3; --deep-pink: #d94f85; --cream: #fff9fb; }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      overflow: hidden;
+      font-family: "DM Sans", sans-serif;
+      color: #5b2940;
+      background: linear-gradient(135deg, #ffdce8, #f8a9c4 55%, #fbd6e3);
+      display: grid;
+      place-items: center;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(circle at 20% 20%, rgba(255,255,255,.8) 0 2px, transparent 3px);
+      background-size: 55px 55px;
+      opacity: .35;
+    }
+
+    .card {
+      position: relative;
+      width: min(560px, calc(100% - 32px));
+      min-height: 390px;
+      padding: 48px 38px;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,.75);
+      border-radius: 32px;
+      background: rgba(255, 249, 251, .87);
+      box-shadow: 0 24px 70px rgba(160, 57, 99, .22);
+      backdrop-filter: blur(12px);
+    }
+
+    .heart {
+      display: inline-grid;
+      place-items: center;
+      width: 68px;
+      height: 68px;
+      margin-bottom: 8px;
+      font-size: 34px;
+      border-radius: 50%;
+      background: #ffe4ef;
+      animation: pulse 1.8s infinite;
+    }
+
+    h1 {
+      margin: 12px 0;
+      font-family: "Playfair Display", serif;
+      font-size: clamp(38px, 9vw, 58px);
+      line-height: 1.05;
+      color: #a82e60;
+    }
+
+    p { margin: 8px 0 30px; font-size: 18px; }
+
+    .buttons {
+      min-height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 14px 27px;
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform .2s, box-shadow .2s;
+    }
+
+    #yes { color: white; background: linear-gradient(135deg, #e85d96, #c83372); box-shadow: 0 10px 24px rgba(200, 51, 114, .3); }
+    #no { color: #a82e60; background: white; border: 1px solid #f5bed2; }
+    button:hover { transform: translateY(-3px); }
+
+    .message { display: none; }
+    .message.show { display: block; animation: pop .5s ease-out; }
+
+    .floating {
+      position: fixed;
+      bottom: -30px;
+      pointer-events: none;
+      animation: floatUp linear forwards;
+      z-index: -1;
+    }
+
+    @keyframes pulse { 50% { transform: scale(1.08); } }
+    @keyframes pop { from { opacity: 0; transform: scale(.85); } to { opacity: 1; transform: scale(1); } }
+    @keyframes floatUp { to { transform: translateY(-110vh) rotate(360deg); opacity: 0; } }
+
+    @media (max-width: 480px) {
+      .card { padding: 38px 20px; }
+      p { font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <section id="question">
+      <div class="heart">💗</div>
+      <h1>Will you be my Valentine?</h1>
+      <p>You make ordinary days feel extraordinary.</p>
+      <div class="buttons">
+        <button id="yes">Yes, of course! 💕</button>
+        <button id="no">No</button>
+      </div>
+    </section>
+
+    <section id="answer" class="message">
+      <div class="heart">💞</div>
+      <h1>You said yes!</h1>
+      <p>I’m the luckiest person in the world. ❤️</p>
+    </section>
+  </main>
+
+  <script>
+    const yes = document.getElementById('yes');
+    const no = document.getElementById('no');
+    let noCount = 0;
+
+    yes.addEventListener('click', () => {
+      document.getElementById('question').style.display = 'none';
+      document.getElementById('answer').classList.add('show');
+      for (let i = 0; i < 36; i++) setTimeout(makeHeart, i * 40);
+    });
+
+    no.addEventListener('mouseenter', dodge);
+    no.addEventListener('click', dodge);
+
+    function dodge() {
+      noCount++;
+      const x = Math.random() * 180 - 90;
+      const y = Math.random() * 100 - 50;
+      no.style.transform = `translate(${x}px, ${y}px)`;
+      no.textContent = ['Are you sure?', 'Really sure?', 'Please? 🥺', 'Think again!', 'Pretty please?'][noCount % 5];
+    }
+
+    function makeHeart() {
+      const heart = document.createElement('span');
+      heart.className = 'floating';
+      heart.textContent = Math.random() > .5 ? '♥' : '💗';
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.fontSize = (14 + Math.random() * 28) + 'px';
+      heart.style.color = Math.random() > .5 ? '#d94f85' : '#ffffff';
+      heart.style.animationDuration = (4 + Math.random() * 3) + 's';
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 7000);
+    }
+
+    setInterval(makeHeart, 900);
+  </script>
+</body>
+</html>
