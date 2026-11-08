@@ -8,6 +8,8 @@ namespace RaceDay.Web.Controllers
     {
         public IActionResult Index()
         {
+            if (HttpContext.Session.GetString("Role") == "Organiser")
+                return RedirectToAction("Dashboard", "Organiser");
             return View();
         }
 
