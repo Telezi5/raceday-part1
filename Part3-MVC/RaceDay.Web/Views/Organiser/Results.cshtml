@@ -1,0 +1,53 @@
+﻿@model RaceDay.Web.Models.EventEntriesViewModel
+@{
+    ViewData["Title"] = "Results";
+}
+
+<a asp-action="Events" class="text-decoration-none">← Back to events</a>
+<h2 class="rd-heading my-3">Results: @Model.Event.EventName</h2>
+<p class="text-muted">Enter each participant’s finish time (hh:mm:ss) and finishing position after the event.</p>
+
+@if (!Model.Entries.Any())
+{
+    <div class="card rd-card"><div class="card-body text-muted">There are no enrolled participants for this event.</div></div>
+}
+else
+{
+    @foreach (var e in Model.Entries)
+    {
+        var r = e.Result;
+        var status = r?.Status ?? "Finished";
+        <div class="card rd-card mb-3">
+            <div class="card-body">
+                <form asp-action="SaveResult" method="post" class="row g-2 align-items-end">
+                    <input type="hidden" name="eventId" value="@Model.Event.EventID" />
+                    <input type="hidden" name="entryId" value="@e.EntryID" />
+                    <input type="hidden" name="resultId" value="@(r?.ResultID ?? 0)" />
+                    <div class="col-md-3">
+                        <div class="fw-bold">@e.ParticipantName</div>
+                        <div class="text-muted small">@e.CategoryName · Bib @(e.BibNumber ?? "-")</div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label small mb-0">Finish time</label>
+                        <input name="finishTime" class="form-control" placeholder="01:45:30" value="@r?.FinishTime" />
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label small mb-0">Position</label>
+                        <input name="position" type="number" min="1" class="form-control" value="@r?.Position" />
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label small mb-0">Status</label>
+                        <select name="status" class="form-select">
+                            <option value="Finished" selected="@(status == "Finished")">Finished</option>
+                            <option value="DNF" selected="@(status == "DNF")">DNF</option>
+                            <option value="DNS" selected="@(status == "DNS")">DNS</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-rd w-100">@(r == null ? "Publish" : "Update")</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    }
+}

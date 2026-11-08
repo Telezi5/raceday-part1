@@ -1,0 +1,46 @@
+﻿@model List<RaceDay.Web.Models.EventDto>
+@{
+    ViewData["Title"] = "My Events";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="rd-heading mb-0">My events</h2>
+    <a asp-action="CreateEvent" class="btn btn-rd">+ New event</a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="card rd-card"><div class="card-body text-muted">No events yet. Click “New event” to create one.</div></div>
+}
+else
+{
+    <div class="card rd-card">
+        <div class="card-body table-responsive">
+            <table class="table align-middle mb-0">
+                <thead><tr><th>Name</th><th>Type</th><th>Date</th><th>City</th><th>Status</th><th class="text-end">Actions</th></tr></thead>
+                <tbody>
+                    @foreach (var e in Model)
+                    {
+                        <tr>
+                            <td class="fw-bold">@e.EventName</td>
+                            <td>@e.EventType</td>
+                            <td>@e.EventDate.ToString("dd MMM yyyy")</td>
+                            <td>@e.City</td>
+                            <td>@e.Status</td>
+                            <td class="text-end text-nowrap">
+                                <a class="btn btn-sm btn-outline-dark" asp-action="EditEvent" asp-route-id="@e.EventID">Edit</a>
+                                <a class="btn btn-sm btn-outline-dark" asp-action="Categories" asp-route-eventId="@e.EventID">Categories</a>
+                                <a class="btn btn-sm btn-outline-dark" asp-action="Enrolments" asp-route-eventId="@e.EventID">Enrolments</a>
+                                <a class="btn btn-sm btn-outline-dark" asp-action="Results" asp-route-eventId="@e.EventID">Results</a>
+                                <form asp-action="DeleteEvent" asp-route-id="@e.EventID" method="post" class="d-inline"
+                                      onsubmit="return confirm('Delete this event? This cannot be undone.');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

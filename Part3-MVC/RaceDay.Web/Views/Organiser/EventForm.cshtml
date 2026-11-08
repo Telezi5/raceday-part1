@@ -1,0 +1,84 @@
+﻿@model RaceDay.Web.Models.EventFormViewModel
+@{
+    var isNew = Model.EventID == 0;
+    ViewData["Title"] = isNew ? "New event" : "Edit event";
+}
+
+<h2 class="rd-heading mb-4">@(isNew ? "Create event" : "Edit event")</h2>
+
+<div class="card rd-card">
+    <div class="card-body p-4">
+        <form asp-action="@(isNew ? "CreateEvent" : "EditEvent")" method="post">
+            <input type="hidden" asp-for="EventID" />
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label asp-for="EventName" class="form-label"></label>
+                    <input asp-for="EventName" class="form-control" />
+                    <span asp-validation-for="EventName" class="text-danger"></span>
+                </div>
+                <div class="col-md-3">
+                    <label asp-for="EventType" class="form-label"></label>
+                    <select asp-for="EventType" class="form-select">
+                        <option value="Run">Run</option>
+                        <option value="Walk">Walk</option>
+                        <option value="Cycle">Cycle</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label asp-for="EventDate" class="form-label"></label>
+                    <input asp-for="EventDate" class="form-control" />
+                    <span asp-validation-for="EventDate" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="City" class="form-label"></label>
+                    <input asp-for="City" class="form-control" />
+                    <span asp-validation-for="City" class="text-danger"></span>
+                </div>
+                <div class="col-md-3">
+                    <label asp-for="DistanceKM" class="form-label"></label>
+                    <input asp-for="DistanceKM" class="form-control" />
+                </div>
+                <div class="col-md-3">
+                    <label asp-for="Status" class="form-label"></label>
+                    <select asp-for="Status" class="form-select">
+                        <option value="Published">Published</option>
+                        <option value="Draft">Draft</option>
+                    </select>
+                </div>
+                <div class="col-12">
+                    <label asp-for="Description" class="form-label"></label>
+                    <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="StartPoint" class="form-label"></label>
+                    <input asp-for="StartPoint" class="form-control" />
+                    <span asp-validation-for="StartPoint" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="EndPoint" class="form-label"></label>
+                    <input asp-for="EndPoint" class="form-control" />
+                    <span asp-validation-for="EndPoint" class="text-danger"></span>
+                </div>
+                <div class="col-md-8">
+                    <label asp-for="RouteDescription" class="form-label"></label>
+                    <input asp-for="RouteDescription" class="form-control" />
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="ElevationGainM" class="form-label"></label>
+                    <input asp-for="ElevationGainM" class="form-control" />
+                </div>
+            </div>
+
+            <div class="mt-4 d-flex gap-2">
+                <button type="submit" class="btn btn-rd">@(isNew ? "Create event" : "Save changes")</button>
+                <a asp-action="Events" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

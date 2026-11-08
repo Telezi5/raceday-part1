@@ -1,0 +1,12 @@
+﻿@model string?
+@{
+    var s = (Model ?? "").Trim().ToLower();
+    var cls = s switch
+    {
+        "confirmed" or "paid" => "badge-confirmed",
+        "pending" or "unpaid" => "badge-pending",
+        "cancelled" or "failed" => "badge-cancelled",
+        _ => "bg-secondary"
+    };
+}
+<span class="badge @cls">@(string.IsNullOrWhiteSpace(Model) ? "Unknown" : Model)</span>
