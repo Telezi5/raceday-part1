@@ -101,3 +101,27 @@ main {
     font-weight: 900;
     color: var(--rd-orange);
 }
+
+.rd-hero {
+    background: linear-gradient(135deg, var(--rd-dark) 0%, #2a1a12 60%, var(--rd-orange) 140%);
+    color: #fff;
+    padding: 2.5rem 2rem;
+    border-radius: 16px;
+    border-bottom: 5px solid var(--rd-orange);
+}
+
+    .rd-hero h1 {
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+.event-card {
+    transition: transform .15s ease, box-shadow .15s ease;
+    overflow: hidden;
+}
+
+    .event-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(16,24,40,.15);
+    }

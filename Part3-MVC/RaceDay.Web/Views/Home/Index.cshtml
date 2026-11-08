@@ -1,8 +1,62 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model RaceDay.Web.Models.HomeViewModel
+@{
+    ViewData["Title"] = "Upcoming events";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="rd-hero mb-4">
+    <h1>Find your next race</h1>
+    <p class="mb-0">Run. Walk. Cycle. Finish.</p>
 </div>
+
+<form method="get" class="card rd-card mb-4">
+    <div class="card-body row g-2 align-items-end">
+        <div class="col-md-4">
+            <label class="form-label small mb-0">City</label>
+            <input name="city" class="form-control" value="@Model.City" placeholder="e.g. Johannesburg" />
+        </div>
+        <div class="col-md-3">
+            <label class="form-label small mb-0">Date</label>
+            <input name="date" type="date" class="form-control" value="@Model.Date?.ToString("yyyy-MM-dd")" />
+        </div>
+        <div class="col-md-3">
+            <label class="form-label small mb-0">Type</label>
+            <select name="type" class="form-select">
+                <option value="">All types</option>
+                <option value="Run" selected="@(Model.Type == "Run")">Run</option>
+                <option value="Walk" selected="@(Model.Type == "Walk")">Walk</option>
+                <option value="Cycle" selected="@(Model.Type == "Cycle")">Cycle</option>
+            </select>
+        </div>
+        <div class="col-md-2 d-flex gap-2">
+            <button type="submit" class="btn btn-rd flex-fill">Filter</button>
+            <a asp-action="Index" class="btn btn-outline-secondary">Clear</a>
+        </div>
+    </div>
+</form>
+
+@if (!Model.Events.Any())
+{
+    <div class="card rd-card"><div class="card-body text-muted">No upcoming events match your search.</div></div>
+}
+else
+{
+    <div class="row g-4">
+        @foreach (var e in Model.Events)
+        {
+            <div class="col-md-6 col-lg-4">
+                <div class="card rd-card h-100 event-card">
+                    <div class="event-banner"></div>
+                    <div class="card-body d-flex flex-column">
+                        <span class="badge rd-role align-self-start mb-2">@e.EventType</span>
+                        <h5 class="fw-bold">@e.EventName</h5>
+                        <div class="text-muted small mb-2">
+                            📅 @e.EventDate.ToString("dd MMM yyyy") · 📍 @e.City@(e.DistanceKM.HasValue ? " · " + e.DistanceKM.Value.ToString("0.##") + " km" : "")
+                        </div>
+                        <p class="small flex-grow-1">@((e.Description ?? "").Length > 110 ? e.Description![..110] + "…" : e.Description)</p>
+                        <a asp-controller="Events" asp-action="Details" asp-route-id="@e.EventID" class="btn btn-rd mt-auto">View details</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
