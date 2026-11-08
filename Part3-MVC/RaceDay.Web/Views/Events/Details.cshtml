@@ -1,0 +1,88 @@
+﻿@model RaceDay.Web.Models.EventDetailsViewModel
+@{
+    var ev = Model.Event;
+    var role = Context.Session.GetString("Role");
+    ViewData["Title"] = ev.EventName;
+}
+
+<a asp-controller="Home" asp-action="Index" class="text-decoration-none">← Back to events</a>
+
+<div class="card rd-card mt-3 overflow-hidden">
+    <div class="event-banner" style="border-radius:0; height:240px;"></div>
+    <div class="card-body p-4">
+        <span class="badge rd-role mb-2">@ev.EventType</span>
+        <h2 class="rd-heading mb-3">@ev.EventName</h2>
+
+        <div class="row g-3 mb-3">
+            <div class="col-md-3"><div class="text-muted small">Date</div><div class="fw-bold">@ev.EventDate.ToString("dddd, dd MMM yyyy")</div></div>
+            <div class="col-md-3"><div class="text-muted small">Location</div><div class="fw-bold">@ev.City</div></div>
+            <div class="col-md-3"><div class="text-muted small">Distance</div><div class="fw-bold">@(ev.DistanceKM.HasValue ? ev.DistanceKM.Value.ToString("0.##") + " km" : "-")</div></div>
+            <div class="col-md-3"><div class="text-muted small">Organiser</div><div class="fw-bold">@ev.OrganiserName</div></div>
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(ev.Description))
+        {
+            <p>@ev.Description</p>
+        }
+
+        @if (ev.Venue != null)
+        {
+            <h5 class="fw-bold mt-4">Venue and route</h5>
+            <ul class="list-unstyled mb-0">
+                <li><strong>Start:</strong> @ev.Venue.StartPoint</li>
+                <li><strong>Finish:</strong> @ev.Venue.EndPoint</li>
+                @if (!string.IsNullOrWhiteSpace(ev.Venue.RouteDescription))
+                {
+                    <li><strong>Route:</strong> @ev.Venue.RouteDescription</li>
+                }
+                @if (ev.Venue.ElevationGainM.HasValue)
+                {
+                    <li><strong>Elevation gain:</strong> @ev.Venue.ElevationGainM m</li>
+                }
+            </ul>
+        }
+    </div>
+</div>
+
+<div class="card rd-card mt-4">
+    <div class="card-body p-4">
+        <h4 class="fw-bold">Available categories</h4>
+
+        @if (!Model.Categories.Any())
+        {
+            <p class="text-muted mb-0">No categories have been added for this event yet.</p>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead><tr><th>Category</th><th>Distance</th><th>Entry fee</th><th>Max</th><th></th></tr></thead>
+                    <tbody>
+                        @foreach (var c in Model.Categories)
+                        {
+                            <tr>
+                                <td class="fw-bold">@c.CategoryName</td>
+                                <td>@(c.DistanceKM.HasValue ? c.DistanceKM.Value.ToString("0.##") + " km" : "-")</td>
+                                <td>@(c.EntryFee.HasValue ? "R" + c.EntryFee.Value.ToString("0.00") : "Free")</td>
+                                <td>@(c.MaxParticipants?.ToString() ?? "-")</td>
+                                <td class="text-end">
+                                    @if (role == "Participant")
+                                    {
+                                        <form asp-action="Enrol" method="post" class="d-inline">
+                                            <input type="hidden" name="eventId" value="@ev.EventID" />
+                                            <input type="hidden" name="categoryId" value="@c.CategoryID" />
+                                            <button type="submit" class="btn btn-rd btn-sm">Enter event</button>
+                                        </form>
+                                    }
+                                    else if (role == null)
+                                    {
+                                        <a asp-controller="Account" asp-action="Login" class="btn btn-outline-dark btn-sm">Log in to enter</a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div></div>
