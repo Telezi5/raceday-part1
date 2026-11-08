@@ -1,0 +1,38 @@
+﻿@model List<RaceDay.Web.Models.MyResultRow>
+@{
+    ViewData["Title"] = "My Results";
+}
+
+<h2 class="rd-heading mb-4">My results</h2>
+
+@if (!Model.Any())
+{
+    <div class="card rd-card">
+        <div class="card-body text-muted">
+            No results yet. Your race history will appear here once an organiser publishes your finish time.
+        </div>
+    </div>
+}
+else
+{
+    <div class="card rd-card">
+        <div class="card-body table-responsive">
+            <table class="table align-middle mb-0">
+                <thead><tr><th>Event</th><th>Date</th><th>Category</th><th>Finish time</th><th>Position</th><th>Status</th></tr></thead>
+                <tbody>
+                    @foreach (var r in Model)
+                    {
+                        <tr>
+                            <td class="fw-bold">@r.Entry.EventName</td>
+                            <td>@(r.Event != null ? r.Event.EventDate.ToString("dd MMM yyyy") : "-")</td>
+                            <td>@r.Entry.CategoryName</td>
+                            <td class="fw-bold">@(r.Entry.Result?.FinishTime ?? "-")</td>
+                            <td>@r.PositionText</td>
+                            <td><span class="badge badge-confirmed">@(r.Entry.Result?.Status ?? "-")</span></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

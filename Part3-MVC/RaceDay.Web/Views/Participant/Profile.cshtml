@@ -1,0 +1,43 @@
+﻿@model RaceDay.Web.Models.ProfileViewModel
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<h2 class="rd-heading mb-4">My profile</h2>
+
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="card rd-card">
+            <div class="card-body p-4">
+                <form asp-action="Profile" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="Email" />
+                    <input type="hidden" asp-for="Role" />
+                    <input type="hidden" asp-for="DateRegistered" />
+
+                    <div class="mb-3">
+                        <label asp-for="FullName" class="form-label"></label>
+                        <input asp-for="FullName" class="form-control" />
+                        <span asp-validation-for="FullName" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="ContactNumber" class="form-label"></label>
+                        <input asp-for="ContactNumber" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input class="form-control" value="@Model.Email" disabled />
+                    </div>
+                    <div class="mb-3 text-muted small">
+                        Member since @Model.DateRegistered.ToString("dd MMM yyyy")
+                    </div>
+                    <button type="submit" class="btn btn-rd">Save changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
