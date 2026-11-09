@@ -8,8 +8,9 @@
 
 <div class="card rd-card">
     <div class="card-body p-4">
-        <form asp-action="@(isNew ? "CreateEvent" : "EditEvent")" method="post">
+        <form asp-action="@(isNew ? "CreateEvent" : "EditEvent")" method="post" enctype="multipart/form-data">
             <input type="hidden" asp-for="EventID" />
+            <input type="hidden" asp-for="BannerUrl" />
             <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
 
             <div class="row g-3">
@@ -39,12 +40,14 @@
                 <div class="col-md-3">
                     <label asp-for="DistanceKM" class="form-label"></label>
                     <input asp-for="DistanceKM" class="form-control" />
+                    <span asp-validation-for="DistanceKM" class="text-danger"></span>
                 </div>
                 <div class="col-md-3">
                     <label asp-for="Status" class="form-label"></label>
                     <select asp-for="Status" class="form-select">
                         <option value="Published">Published</option>
                         <option value="Draft">Draft</option>
+                        <option value="Completed">Completed</option>
                     </select>
                 </div>
                 <div class="col-12">
@@ -68,6 +71,15 @@
                 <div class="col-md-4">
                     <label asp-for="ElevationGainM" class="form-label"></label>
                     <input asp-for="ElevationGainM" class="form-control" />
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Event banner image</label>
+                    @if (!string.IsNullOrEmpty(Model.BannerUrl))
+                    {
+                        <div class="mb-2"><img src="@Model.BannerUrl" alt="Current banner" style="max-height:140px; border-radius:10px;" /></div>
+                    }
+                    <input type="file" name="Banner" accept="image/*" class="form-control" />
+                    <div class="form-text">JPG, PNG, WEBP or GIF, up to 5 MB. Leave empty to keep the current banner.</div>
                 </div>
             </div>
 

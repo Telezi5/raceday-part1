@@ -41,7 +41,7 @@ public class OrganiserController : Controller
         m.DistanceKM,
         m.Description,
         m.Status,
-        Venue = new { m.StartPoint, m.EndPoint, m.RouteDescription, m.ElevationGainM }
+        Venue = new { m.StartPoint, m.EndPoint, m.RouteDescription, ElevationGainM = m.ElevationGainM ?? 0 }
     };
 
     // ---------- Dashboard ----------
@@ -73,6 +73,13 @@ public class OrganiserController : Controller
             ModelState.AddModelError("", res.Error ?? "Could not create the event.");
             return View("EventForm", m);
         }
+
+        if (m.Banner != null && m.Banner.Length > 0 && res.Data != null)
+        {
+            var up = await _api.PostFileAsync<EventDto>($"api/events/{res.Data.EventID}/banner", m.Banner);
+            if (!up.Success) TempData["Error"] = "The event was created, but the banner could not be uploaded: " + up.Error;
+        }
+
         TempData["Success"] = "Event created.";
         return RedirectToAction("Events");
     }
@@ -95,7 +102,8 @@ public class OrganiserController : Controller
             StartPoint = e.Venue?.StartPoint ?? "",
             EndPoint = e.Venue?.EndPoint ?? "",
             RouteDescription = e.Venue?.RouteDescription,
-            ElevationGainM = e.Venue?.ElevationGainM
+            ElevationGainM = e.Venue?.ElevationGainM,
+            BannerUrl = e.BannerUrl
         });
     }
 
@@ -109,6 +117,13 @@ public class OrganiserController : Controller
             ModelState.AddModelError("", res.Error ?? "Could not update the event.");
             return View("EventForm", m);
         }
+
+        if (m.Banner != null && m.Banner.Length > 0)
+        {
+            var up = await _api.PostFileAsync<EventDto>($"api/events/{m.EventID}/banner", m.Banner);
+            if (!up.Success) TempData["Error"] = "The event was updated, but the banner could not be uploaded: " + up.Error;
+        }
+
         TempData["Success"] = "Event updated.";
         return RedirectToAction("Events");
     }

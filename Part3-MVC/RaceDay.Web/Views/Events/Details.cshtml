@@ -8,7 +8,14 @@
 <a asp-controller="Home" asp-action="Index" class="text-decoration-none">← Back to events</a>
 
 <div class="card rd-card mt-3 overflow-hidden">
-    <div class="event-banner" style="border-radius:0; height:240px;"></div>
+    @if (!string.IsNullOrEmpty(ev.BannerUrl))
+    {
+        <img src="@ev.BannerUrl" alt="@ev.EventName banner" class="event-banner" style="border-radius:0; height:240px;" />
+    }
+    else
+    {
+        <div class="event-banner" style="border-radius:0; height:240px;"></div>
+    }
     <div class="card-body p-4">
         <span class="badge rd-role mb-2">@ev.EventType</span>
         <h2 class="rd-heading mb-3">@ev.EventName</h2>
