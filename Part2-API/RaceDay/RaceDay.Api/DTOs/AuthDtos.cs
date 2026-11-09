@@ -42,6 +42,7 @@ public class UserDto
     public string Role { get; set; } = string.Empty;
     public string? ContactNumber { get; set; }
     public DateTime DateRegistered { get; set; }
+    public string? ProfilePictureUrl { get; set; }
 
     public static UserDto From(User u) => new()
     {
@@ -50,6 +51,8 @@ public class UserDto
         Email = u.Email,
         Role = u.Role,
         ContactNumber = u.ContactNumber,
-        DateRegistered = u.DateRegistered
+        DateRegistered = u.DateRegistered,
+        ProfilePictureUrl = u.ProfilePictureUrl
+
     };
 }

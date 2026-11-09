@@ -11,7 +11,7 @@ public class Event
     public decimal DistanceKM { get; set; }
     public string? Description { get; set; }
     public string Status { get; set; } = "Draft";
-
+    public string? BannerUrl { get; set; }
     public User Organiser { get; set; } = null!;
     public Venue? Venue { get; set; }
     public List<Category> Categories { get; set; } = new();

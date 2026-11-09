@@ -56,6 +56,7 @@ public class EventResponseDto
     public decimal DistanceKM { get; set; }
     public string? Description { get; set; }
     public string Status { get; set; } = string.Empty;
+    public string? BannerUrl { get; set; }
     public VenueDto? Venue { get; set; }
 
     public static EventResponseDto From(Event e) => new()
@@ -70,6 +71,7 @@ public class EventResponseDto
         DistanceKM = e.DistanceKM,
         Description = e.Description,
         Status = e.Status,
+        BannerUrl = e.BannerUrl,
         Venue = e.Venue == null ? null : new VenueDto
         {
             StartPoint = e.Venue.StartPoint,
