@@ -1,0 +1,12 @@
+services:
+  raceday-web:
+    build: .
+    image: raceday-web
+    container_name: raceday-web
+    ports:
+      - "8080:8080"
+    environment:
+      ApiBaseUrl: "https://host.docker.internal:7110/"
+      ApiAllowUntrustedCertificate: "true"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
