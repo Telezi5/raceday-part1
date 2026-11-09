@@ -14,7 +14,18 @@ builder.Services.AddHttpClient<RaceDay.Web.Services.ApiClient>(c =>
 {
     c.BaseAddress = new Uri(builder.Configuration["ApiBaseUrl"]!);
 })
-.ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler { UseCookies = false });
+.ConfigurePrimaryHttpMessageHandler(() =>
+{
+    var handler = new HttpClientHandler { UseCookies = false };
+
+    // Development/Docker only: the API uses a local development certificate.
+    if (builder.Configuration.GetValue<bool>("ApiAllowUntrustedCertificate"))
+    {
+        handler.ServerCertificateCustomValidationCallback =
+            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
+    }
+    return handler;
+});
 
 var app = builder.Build();
 
@@ -37,6 +48,5 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
-
 
 app.Run();
