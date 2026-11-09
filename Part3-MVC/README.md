@@ -75,6 +75,7 @@ No Azure subscription was available for this project, so the official Azure Stor
 ## GitHub and CI/CD
 
 - Part 3 work is on the branch `part3-mvc-frontend`, in the `Part3-MVC` folder.
-- The GitHub Actions workflow `.github/workflows/part2-ci.yml` builds and tests the API, validates the Part 3 repository structure, builds the MVC project and builds the Docker image on every push.
+- GitHub Actions runs on every push: `.github/workflows/part2-ci.yml` builds and tests the Part 2 API, and `.github/workflows/part3-ci.yml` validates the Part 3 repository structure, builds the MVC project and builds the Docker image.
 
 ![CI build](docs/ci-green.png)
+
