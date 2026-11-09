@@ -5,7 +5,30 @@
 
 <h2 class="rd-heading mb-4">My profile</h2>
 
-<div class="row justify-content-center">
+<div class="row justify-content-center g-4">
+    <div class="col-md-4">
+        <div class="card rd-card">
+            <div class="card-body p-4 text-center">
+                @if (!string.IsNullOrEmpty(Model.ProfilePictureUrl))
+                {
+                    <img src="@Model.ProfilePictureUrl" alt="Profile picture" class="rounded-circle mb-3"
+                         style="width:160px; height:160px; object-fit:cover; border:4px solid var(--rd-orange);" />
+                }
+                else
+                {
+                    <div class="rounded-circle mb-3 d-inline-flex align-items-center justify-content-center"
+                         style="width:160px; height:160px; background:var(--rd-dark); color:#fff; font-size:3rem; font-weight:900; border:4px solid var(--rd-orange);">
+                        @(Model.FullName.Length > 0 ? Model.FullName.Substring(0, 1).ToUpper() : "?")
+                    </div>
+                }
+                <form asp-action="UploadPicture" method="post" enctype="multipart/form-data">
+                    <input type="file" name="picture" accept="image/*" class="form-control mb-2" />
+                    <button type="submit" class="btn btn-rd w-100">Upload picture</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <div class="col-md-7">
         <div class="card rd-card">
             <div class="card-body p-4">
@@ -14,6 +37,7 @@
                     <input type="hidden" asp-for="Email" />
                     <input type="hidden" asp-for="Role" />
                     <input type="hidden" asp-for="DateRegistered" />
+                    <input type="hidden" asp-for="ProfilePictureUrl" />
 
                     <div class="mb-3">
                         <label asp-for="FullName" class="form-label"></label>

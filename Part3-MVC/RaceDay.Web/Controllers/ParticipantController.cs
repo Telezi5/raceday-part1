@@ -81,7 +81,8 @@ public class ParticipantController : Controller
             ContactNumber = me.Data.ContactNumber,
             Email = me.Data.Email,
             Role = me.Data.Role,
-            DateRegistered = me.Data.DateRegistered
+            DateRegistered = me.Data.DateRegistered,
+            ProfilePictureUrl = me.Data.ProfilePictureUrl
         });
     }
 
@@ -97,6 +98,21 @@ public class ParticipantController : Controller
         }
         HttpContext.Session.SetString("FullName", m.FullName);
         TempData["Success"] = "Profile updated.";
+        return RedirectToAction("Profile");
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> UploadPicture(IFormFile? picture)
+    {
+        if (picture == null || picture.Length == 0)
+        {
+            TempData["Error"] = "Please choose an image first.";
+            return RedirectToAction("Profile");
+        }
+
+        var res = await _api.PostFileAsync<UserDto>("api/users/me/picture", picture);
+        if (res.Success) TempData["Success"] = "Profile picture updated.";
+        else TempData["Error"] = res.Error ?? "We could not upload that picture.";
         return RedirectToAction("Profile");
     }
 }
