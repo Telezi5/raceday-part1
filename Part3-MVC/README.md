@@ -2,7 +2,7 @@
 
 RaceDay is a South African running, walking and cycling event management platform. Part 3 adds the ASP.NET Core MVC front end that consumes the Part 2 RESTful API. Images are uploaded through the API to Azure Blob Storage (the Azurite emulator), and the MVC application is containerised with Docker.
 
-**Demo video (unlisted YouTube):** [PASTE YOUTUBE LINK HERE]
+**Demo video (unlisted YouTube):** https://youtu.be/hJg54AS2Cfw
 
 ## Features
 
@@ -78,4 +78,5 @@ No Azure subscription was available for this project, so the official Azure Stor
 - GitHub Actions runs on every push: `.github/workflows/part2-ci.yml` builds and tests the Part 2 API, and `.github/workflows/part3-ci.yml` validates the Part 3 repository structure, builds the MVC project and builds the Docker image.
 
 ![CI build](docs/ci-green.png)
+
 
