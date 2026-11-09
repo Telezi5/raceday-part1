@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using RaceDay.Api.Data;
 using RaceDay.Api.DTOs;
 using RaceDay.Api.Filters;
+using RaceDay.Api.Services;
+
 
 namespace RaceDay.Api.Controllers;
 
@@ -82,5 +84,34 @@ public class UsersController : ControllerBase
             .ToListAsync();
 
         return Ok(entries.Select(EntryResponseDto.From));
+    }
+
+    /// <summary>Uploads or replaces the logged-in user's profile picture in Blob Storage.</summary>
+    /// <remarks>Send the image as multipart/form-data in a field called "file". JPG, PNG, WEBP or GIF, up to 5 MB.</remarks>
+    /// <response code="200">Picture saved. Returns the updated profile with its profilePictureUrl.</response>
+    /// <response code="400">Not a valid image.</response>
+    /// <response code="401">Not logged in.</response>
+    [HttpPost("picture")]
+    [Consumes("multipart/form-data")]
+    [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> UploadPicture(IFormFile file, [FromServices] BlobImageService images)
+    {
+        var user = await _db.Users.FindAsync(CurrentUserId);
+        if (user == null)
+        {
+            HttpContext.Session.Clear();
+            return Unauthorized(new { message = "Please log in first." });
+        }
+
+        var error = BlobImageService.Validate(file);
+        if (error != null)
+            return BadRequest(new { message = error });
+
+        user.ProfilePictureUrl = await images.UploadAsync(file, "profiles");
+        await _db.SaveChangesAsync();
+
+        return Ok(UserDto.From(user));
     }
 }

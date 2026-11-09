@@ -4,6 +4,7 @@ using RaceDay.Api.Data;
 using RaceDay.Api.DTOs;
 using RaceDay.Api.Filters;
 using RaceDay.Api.Models;
+using RaceDay.Api.Services;
 
 namespace RaceDay.Api.Controllers;
 
@@ -193,5 +194,41 @@ public class EventsController : ControllerBase
         await _db.SaveChangesAsync();
 
         return NoContent();
+    }
+
+    /// <summary>Uploads or replaces an event's banner image in Blob Storage. Only the owning Organiser may do this.</summary>
+    /// <remarks>Send the image as multipart/form-data in a field called "file". JPG, PNG, WEBP or GIF, up to 5 MB.</remarks>
+    /// <param name="id">The event's ID.</param>
+    /// <response code="200">Banner saved. Returns the updated event with its bannerUrl.</response>
+    /// <response code="400">Not a valid image.</response>
+    /// <response code="401">Not logged in.</response>
+    /// <response code="403">Caller is not the owning Organiser.</response>
+    /// <response code="404">The event does not exist.</response>
+    [HttpPost("{id:int}/banner")]
+    [SessionAuthorize(Role = "Organiser")]
+    [Consumes("multipart/form-data")]
+    [ProducesResponseType(typeof(EventResponseDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UploadBanner(int id, IFormFile file, [FromServices] BlobImageService images)
+    {
+        var ev = await _db.Events.Include(e => e.Organiser).Include(e => e.Venue)
+            .FirstOrDefaultAsync(e => e.EventID == id);
+
+        if (ev == null)
+            return NotFound(new { message = "Event not found." });
+        if (ev.OrganiserID != CurrentUserId)
+            return StatusCode(StatusCodes.Status403Forbidden, new { message = "You can only change your own events." });
+
+        var error = BlobImageService.Validate(file);
+        if (error != null)
+            return BadRequest(new { message = error });
+
+        ev.BannerUrl = await images.UploadAsync(file, "events");
+        await _db.SaveChangesAsync();
+
+        return Ok(EventResponseDto.From(ev));
     }
 }
