@@ -1,0 +1,33 @@
+name: Part 3 - MVC Build
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  mvc-build:
+    name: Part 3 MVC - validate, build and containerise
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate repository structure
+        run: |
+          for path in Part3-MVC/README.md Part3-MVC/RaceDay.Web/RaceDay.Web.csproj Part3-MVC/RaceDay.Web/Program.cs Part3-MVC/RaceDay.Web/Dockerfile Part3-MVC/RaceDay.Web/docker-compose.yml Part3-MVC/RaceDay.Web/Controllers Part3-MVC/RaceDay.Web/Views; do
+            if [ -e "$path" ]; then echo "OK: $path"; else echo "MISSING: $path"; exit 1; fi
+          done
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore MVC dependencies
+        run: dotnet restore Part3-MVC/RaceDay.Web/RaceDay.Web.csproj
+
+      - name: Build MVC project
+        run: dotnet build Part3-MVC/RaceDay.Web/RaceDay.Web.csproj --configuration Release --no-restore
+
+      - name: Build Docker image
+        run: docker build -t raceday-web Part3-MVC/RaceDay.Web
