@@ -30,6 +30,34 @@ public class ApiClient
     public Task<ApiResult<T>> PutAsync<T>(string url, object? body = null) => SendAsync<T>(HttpMethod.Put, url, body);
     public Task<ApiResult<T>> DeleteAsync<T>(string url) => SendAsync<T>(HttpMethod.Delete, url);
 
+    /// <summary>Sends an image to the API as multipart/form-data (field name "file").</summary>
+    public async Task<ApiResult<T>> PostFileAsync<T>(string url, IFormFile file)
+    {
+        try
+        {
+            using var content = new MultipartFormDataContent();
+            await using var stream = file.OpenReadStream();
+            var fileContent = new StreamContent(stream);
+            fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+            content.Add(fileContent, "file", file.FileName);
+
+            var req = new HttpRequestMessage(HttpMethod.Post, url) { Content = content };
+            var cookie = Session.GetString("ApiCookie");
+            if (!string.IsNullOrEmpty(cookie)) req.Headers.Add("Cookie", cookie);
+
+            var res = await _http.SendAsync(req);
+            return await ReadAsync<T>(res);
+        }
+        catch (HttpRequestException)
+        {
+            return new ApiResult<T> { Success = false, Error = "The RaceDay service is not reachable right now. Please try again shortly." };
+        }
+        catch (TaskCanceledException)
+        {
+            return new ApiResult<T> { Success = false, Error = "The upload took too long. Please try again." };
+        }
+    }
+
     private async Task<ApiResult<T>> SendAsync<T>(HttpMethod method, string url, object? body = null, bool captureCookie = false)
     {
         try
@@ -50,19 +78,7 @@ public class ApiClient
                 Session.SetString("ApiCookie", string.Join("; ", pairs));
             }
 
-            var text = await res.Content.ReadAsStringAsync();
-
-            if (res.IsSuccessStatusCode)
-            {
-                T? data = default;
-                if (!string.IsNullOrWhiteSpace(text))
-                {
-                    try { data = JsonSerializer.Deserialize<T>(text, Json); } catch { }
-                }
-                return new ApiResult<T> { Success = true, Data = data, Status = (int)res.StatusCode };
-            }
-
-            return new ApiResult<T> { Success = false, Status = (int)res.StatusCode, Error = FriendlyError((int)res.StatusCode, text) };
+            return await ReadAsync<T>(res);
         }
         catch (HttpRequestException)
         {
@@ -74,15 +90,34 @@ public class ApiClient
         }
     }
 
+    private static async Task<ApiResult<T>> ReadAsync<T>(HttpResponseMessage res)
+    {
+        var text = await res.Content.ReadAsStringAsync();
+
+        if (res.IsSuccessStatusCode)
+        {
+            T? data = default;
+            if (!string.IsNullOrWhiteSpace(text))
+            {
+                try { data = JsonSerializer.Deserialize<T>(text, Json); } catch { }
+            }
+            return new ApiResult<T> { Success = true, Data = data, Status = (int)res.StatusCode };
+        }
+
+        return new ApiResult<T> { Success = false, Status = (int)res.StatusCode, Error = FriendlyError((int)res.StatusCode, text) };
+    }
+
     private static string FriendlyError(int status, string body)
     {
         try
         {
             using var doc = JsonDocument.Parse(body);
-            if (doc.RootElement.TryGetProperty("detail", out var d) && d.ValueKind == JsonValueKind.String && !string.IsNullOrWhiteSpace(d.GetString()))
-                return d.GetString()!;
-            if (doc.RootElement.TryGetProperty("title", out var t) && t.ValueKind == JsonValueKind.String)
-                return t.GetString()!;
+            foreach (var name in new[] { "message", "detail", "title" })
+            {
+                if (doc.RootElement.TryGetProperty(name, out var p) && p.ValueKind == JsonValueKind.String
+                    && !string.IsNullOrWhiteSpace(p.GetString()))
+                    return p.GetString()!;
+            }
         }
         catch { }
 

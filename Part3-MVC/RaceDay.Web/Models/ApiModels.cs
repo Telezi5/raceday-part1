@@ -8,6 +8,7 @@ public class UserDto
     public string Role { get; set; } = "";
     public string? ContactNumber { get; set; }
     public DateTime DateRegistered { get; set; }
+    public string? ProfilePictureUrl { get; set; }
 }
 
 public class VenueDto
@@ -31,6 +32,7 @@ public class EventDto
     public string? Description { get; set; }
     public string? Status { get; set; }
     public VenueDto? Venue { get; set; }
+    public string? BannerUrl { get; set; }
 }
 
 public class CategoryDto

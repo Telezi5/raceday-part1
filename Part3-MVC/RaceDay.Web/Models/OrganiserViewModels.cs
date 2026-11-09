@@ -9,13 +9,15 @@ public class EventFormViewModel
     [Required, Display(Name = "Event type")] public string EventType { get; set; } = "Run";
     [Required, DataType(DataType.Date), Display(Name = "Event date")] public DateTime EventDate { get; set; } = DateTime.Today.AddDays(30);
     [Required, Display(Name = "City / location")] public string City { get; set; } = "";
-    [Display(Name = "Distance (km)")] public decimal? DistanceKM { get; set; }
+    [Required(ErrorMessage = "Please enter the distance in km."), Display(Name = "Distance (km)")] public decimal? DistanceKM { get; set; }
     public string? Description { get; set; }
     public string Status { get; set; } = "Published";
     [Required, Display(Name = "Start point")] public string StartPoint { get; set; } = "";
     [Required, Display(Name = "End point")] public string EndPoint { get; set; } = "";
     [Display(Name = "Route description")] public string? RouteDescription { get; set; }
     [Display(Name = "Elevation gain (m)")] public int? ElevationGainM { get; set; }
+    public string? BannerUrl { get; set; }
+    public IFormFile? Banner { get; set; }
 }
 
 public class CategoryFormViewModel

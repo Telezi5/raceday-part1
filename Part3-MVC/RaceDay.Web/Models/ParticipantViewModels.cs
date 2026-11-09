@@ -48,4 +48,5 @@ public class ProfileViewModel
     public string Email { get; set; } = "";
     public string Role { get; set; } = "";
     public DateTime DateRegistered { get; set; }
+    public string? ProfilePictureUrl { get; set; }
 }
